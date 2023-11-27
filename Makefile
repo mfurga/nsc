@@ -2,9 +2,9 @@ CFLAGS :=
 CFLAGS += -Wall -Wextra
 
 all:
-	gcc $(CFLAGS) sandbox.c -o sandbox
+	gcc $(CFLAGS) nsc.c -o nsc
 
 .PHONY: clean
 clean:
-	rm sandbox
+	rm nsc
 

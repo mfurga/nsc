@@ -17,7 +17,7 @@
 
 /* config */
 #define STACK_SIZE            4096
-#define MAP_BUF_SIZE          64 
+#define MAP_BUF_SIZE          64
 #define PATH_BUF_SIZE         128
 #define MAP_SIZE              16
 
@@ -164,6 +164,10 @@ static void map_user(id_map_t *id_map, const char *map_file) {
   char map_buf[MAP_BUF_SIZE];
   size_t sz = 0;
 
+  if (id_map->idx == 0) {
+    return;
+  }
+
   for (int i = 0; i < id_map->idx; i++) {
     sz += snprintf(map_buf + sz,
                    sizeof(map_buf) - sz,
@@ -221,12 +225,12 @@ int main(int argc, char **argv) {
   static const struct option opts[] = {
     { .name = "user",   .has_arg = 1, NULL, 'u' },
     { .name = "group",  .has_arg = 1, NULL, 'g' },
-    { .name = "chroot", .has_arg = 1, NULL, 'c' },
+    { .name = "root",   .has_arg = 1, NULL, 'c' },
     { .name = "help",   .has_arg = 0, NULL, 'h' },
     { NULL, 0, NULL, 0}
   };
 
-  while ((opt = getopt_long(argc, argv, "+u:g:c:h", opts, NULL)) != -1) {
+  while ((opt = getopt_long(argc, argv, "+u:g:r:h", opts, NULL)) != -1) {
     switch (opt) {
       case 'u':
         if (sscanf(optarg, "%d:%d", &inside, &outside) != 2) {
@@ -244,7 +248,7 @@ int main(int argc, char **argv) {
         id_map_append(&gid_map, inside, outside);
         break;
 
-      case 'c':
+      case 'r':
         mnt_src = optarg;
         break;
 
